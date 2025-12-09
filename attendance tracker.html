@@ -1,0 +1,40 @@
+<html>
+<head><title>Employee Attendance Tracker</title></head>
+<body>
+  <h1>Employee Attendance Tracker</h1>
+  <a href="/employee/add">Add An Employee</a> | <a href="/event/add">Add An Event</a>
+  <table border="1">
+    <thead>
+      <tr>
+        <th></th>
+        @for (Event ev : events) {
+          <th>${ev.getName()}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (Employee e : employees) {
+        <tr>
+          <th>${e.getFirstName()} ${e.getLastName()}</th>
+          @for (Event ev : events) {
+            <td style="text-align:center">
+              <#
+                Map<Long, Attendance> row = attendanceMap.getOrDefault(e.getId(), Collections.emptyMap());
+                Attendance a = row.get(ev.getId());
+              #>
+              @if (a == null || a.getAttended() == null) {
+                <a href="/attendance/record?emp=${e.getId()}&ev=${ev.getId()}&val=true">Yes</a> |
+                <a href="/attendance/record?emp=${e.getId()}&ev=${ev.getId()}&val=false">No</a>
+              } else if (a.getAttended()) {
+                Yes
+              } else {
+                No
+              }
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</body>
+</html>
